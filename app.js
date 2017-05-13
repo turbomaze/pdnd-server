@@ -26,6 +26,11 @@ server.post('/pdnd/press', function (req, res, next) {
   var duration = parseInt(body.data);
   var pressType = utils.getPressType(duration);
 
+  if (process.env.DEBUG === 'true') {
+    console.log('duration ' + duration);
+    console.log('press type ' + pressType);
+  }
+
   // add it to the queue
   queue.push(pressType);
 
@@ -38,9 +43,6 @@ server.post('/pdnd/press', function (req, res, next) {
   if (utils.patternsMatch(pattern, queue)) {
     utils.soundAlarm();
   }
-
-  console.log('duration ' + duration);
-  console.log('press type ' + pressType);
   res.send(pressType);
 
   return next();
