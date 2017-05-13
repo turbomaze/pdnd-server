@@ -1,16 +1,18 @@
+var utils = require('./utils');
 var restify = require('restify');
  
 var server = restify.createServer({
-  name: 'myapp',
-  version: '1.0.0'
+  name: 'pdnd-server',
+  version: '0.0.0'
 });
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
  
 server.post('/pdnd/press', function (req, res, next) {
-  console.log(req.body);
-  res.send(req.body);
+  var body = utils.actuallyParseBody(req.body);
+  console.log(body);
+  res.send(body);
   return next();
 });
  
