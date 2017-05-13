@@ -39,7 +39,8 @@ server.post('/pdnd/press', function (req, res, next) {
     utils.soundAlarm();
   }
 
-  console.log(duration);
+  console.log('duration ' + duration);
+  console.log('press type ' + pressType);
   res.send(pressType);
 
   return next();

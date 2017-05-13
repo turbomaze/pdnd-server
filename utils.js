@@ -9,7 +9,7 @@ module.exports = {
   },
 
   getPressType: function(a) {
-    return a > 100 ? true : false;
+    return a > parseInt(process.env.THRESHOLDMS) ? true : false;
   },
 
   patternsMatch: function(a, b) {
