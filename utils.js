@@ -7,20 +7,19 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-function sendAlarmEmail(message, address) {
+function sendEmail(subject, message, recipients) {
   // setup email data with unicode symbols
-  let mailOptions = {
-    from: '"Fred Foo 👻" <foo@blurdybloop.com>', // sender address
-    to: 'bar@blurdybloop.com, baz@blurdybloop.com', // list of receivers
-    subject: 'Hello ✔', // Subject line
-    text: 'Hello world ?', // plain text body
-    html: '<b>Hello world ?</b>' // html body
+  var mailOptions = {
+    from: 'PDND <pdndisturb@gmail.com>', // sender address
+    to: recipients, // list of receivers
+    subject: subject, // Subject line
+    text: message // plain text body
   };
   
-  //end mail with defined transport object
-  trsporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log(error);
+  // end mail with defined transport object
+  transporter.sendMail(mailOptions, function(err, info) {
+    if (err) {
+      return console.log(err);
     }
     console.log(
       'Message %s sent: %s', info.messageId, info.response
@@ -54,9 +53,15 @@ module.exports = {
   soundAlarm: function() {
     console.log('alerted');
 
-    // twilio
     // email
-    // messenger
-    // slack
+    sendEmail(
+      '[urgent] Please do not disturb our room! eom',
+      '',
+      process.env.EMAIL_RECIPIENTS
+    );
+
+    // TODO: twilio
+    // TODO: messenger
+    // TODO: slack
   }
 };

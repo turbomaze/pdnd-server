@@ -4,4 +4,5 @@ export THRESHOLDMS=350
 export DEBUG=true
 export SENDER_EMAIL=filler
 export SENDER_PASSWORD=filler
+export EMAIL_RECIPIENTS=filler
 node app.js
