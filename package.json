@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/turbomaze/pdnd-server#readme",
   "dependencies": {
-    "restify": "^4.3.0"
+    "restify": "^4.3.0",
+    "sqlite3": "^3.1.8"
   }
 }

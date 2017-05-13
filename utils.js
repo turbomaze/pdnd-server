@@ -6,5 +6,27 @@ module.exports = {
       a[key] = value;
       return a;
     }, {});
+  },
+
+  getPressType: function(a) {
+    return a > 100 ? true : false;
+  },
+
+  patternsMatch: function(a, b) {
+    for (var i = 0; i < Math.min(a.length, b.length); i++) {
+      if (a[i] !== b[i]) {
+        return false;
+      }
+    }
+    return true;
+  },
+
+  soundAlarm: function() {
+    console.log('alerted');
+
+    // twilio
+    // email
+    // messenger
+    // slack
   }
 };
