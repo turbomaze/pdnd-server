@@ -42,7 +42,11 @@ module.exports = {
   },
 
   patternsMatch: function(a, b) {
-    for (var i = 0; i < Math.min(a.length, b.length); i++) {
+    if (a.length !== b.length) {
+      return false;
+    }
+
+    for (var i = 0; i < a.length; i++) {
       if (a[i] !== b[i]) {
         return false;
       }

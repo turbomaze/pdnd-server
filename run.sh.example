@@ -5,4 +5,5 @@ export DEBUG=true
 export SENDER_EMAIL=filler
 export SENDER_PASSWORD=filler
 export EMAIL_RECIPIENTS=filler
+export TIMEOUTMS=5000
 node app.js
