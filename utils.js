@@ -1,6 +1,6 @@
-var nodemailer = require('nodemailer');
+var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.SENDER_EMAIL,
     pass: process.env.SENDER_PASSWORD
@@ -10,28 +10,26 @@ var transporter = nodemailer.createTransport({
 function sendEmail(subject, message, recipients) {
   // setup email data with unicode symbols
   var mailOptions = {
-    from: 'PDND <pdndisturb@gmail.com>', // sender address
+    from: "PDND <pdndisturb@gmail.com>", // sender address
     to: recipients, // list of receivers
     subject: subject, // Subject line
     text: message // plain text body
   };
-  
+
   // end mail with defined transport object
   transporter.sendMail(mailOptions, function(err, info) {
     if (err) {
       return console.log(err);
     }
-    console.log(
-      'Message %s sent: %s', info.messageId, info.response
-    );
+    console.log("Message %s sent: %s", info.messageId, info.response);
   });
 }
 
 module.exports = {
   actuallyParseBody: function(s) {
-    return s.split('&').reduce(function(a, keyValue) {
-      var key = keyValue.split('=')[0];
-      var value = keyValue.split('=')[1];
+    return s.split("&").reduce(function(a, keyValue) {
+      var key = keyValue.split("=")[0];
+      var value = keyValue.split("=")[1];
       a[key] = value;
       return a;
     }, {});
@@ -54,15 +52,23 @@ module.exports = {
     return true;
   },
 
-  soundAlarm: function() {
-    console.log('alerted');
+  soundAlarm: function(author) {
+    console.log("alerted");
 
     // email
-    sendEmail(
-      '[urgent] Please do not disturb our room! eom',
-      '',
-      process.env.EMAIL_RECIPIENTS
-    );
+    if (author) {
+      sendEmail(
+        "[urgent] Please do not disturb our room (" + author + ")! eom",
+        "",
+        process.env.EMAIL_RECIPIENTS
+      );
+    } else {
+      sendEmail(
+        "[urgent] Please do not disturb our room! eom",
+        "",
+        process.env.EMAIL_RECIPIENTS
+      );
+    }
 
     // TODO: twilio
     // TODO: messenger

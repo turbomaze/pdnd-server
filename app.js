@@ -1,37 +1,38 @@
 // deps
-var utils = require('./utils');
-var restify = require('restify');
+var utils = require("./utils");
+var restify = require("restify");
 
 // config
-var pattern = process.env.PATTERN.split('').map(function(s) {
-  return s === '1' ? true : false;
+var pattern = process.env.PATTERN.split("").map(function(s) {
+  return s === "1" ? true : false;
 });
 var timeout = parseInt(process.env.TIMEOUTMS);
- 
+
 // set up the server
 var server = restify.createServer({
-  name: 'pdnd-server',
-  version: '0.0.0'
+  name: "pdnd-server",
+  version: "0.0.0"
 });
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
- 
+
 // state
 var queue = [];
-var timeOfLastPress = +new Date();
-var timeOfLastSend = +new Date();
+var timeOfLastPress = 0;
+var timeOfLastSend = 0;
+var timeOfLastForceSend = 0;
 
 // routes
-server.post('/pdnd/press', function (req, res, next) {
+server.post("/pdnd/press", function(req, res, next) {
   // get the press type
   var body = utils.actuallyParseBody(req.body);
   var duration = parseInt(body.data);
   var pressType = utils.getPressType(duration);
 
-  if (process.env.DEBUG === 'true') {
-    console.log('duration ' + duration);
-    console.log('press type ' + pressType);
+  if (process.env.DEBUG === "true") {
+    console.log("duration " + duration);
+    console.log("press type " + pressType);
   }
 
   // add it to the queue
@@ -63,8 +64,24 @@ server.post('/pdnd/press', function (req, res, next) {
 
   return next();
 });
- 
+
+server.get("/pdnd/alert/:author", function(req, res) {
+  // get the press type
+  const author = req.params["author"];
+
+  // compare against the pattern
+  var currentTime = +new Date();
+  var sendDuration = currentTime - timeOfLastForceSend;
+  console.log(author, sendDuration, timeout);
+  if (sendDuration > timeout) {
+    console.log(author + " just sent a PDND notification.");
+    utils.soundAlarm(author);
+    timeOfLastForceSend = currentTime;
+  }
+  res.send({ success: true });
+});
+
 // start the server
-server.listen(parseInt(process.env.PORT), function () {
-  console.log('%s listening at %s', server.name, server.url);
+server.listen(parseInt(process.env.PORT), function() {
+  console.log("%s listening at %s", server.name, server.url);
 });
